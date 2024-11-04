@@ -45,10 +45,6 @@ userSchema.methods.isCorrectPassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-const User = model('User', userSchema);
-
-module.exports = User;
-
 userSchema.virtual('clipCount').get(function () {
   return this.savedclips.length;
 });
