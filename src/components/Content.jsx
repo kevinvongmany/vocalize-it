@@ -2,8 +2,9 @@ import React from 'react'
 
 const Content = () => {
     return (
-        <div>
-            <main>
+        <div className='mt-20 px-20'>
+            <main className='border rounded-xl p-4 bg-indigo-950'>
+                <h1 className="mt-6 mb-12 text-3xl">Vocalise It</h1>
                 <section className="container">
                     <div className="grid">
                         <select id="API">
