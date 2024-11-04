@@ -1,9 +1,41 @@
-const { Schema, mongoose, model } = require('mongoose');
+const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
-// import schema from Clip.js
-const voiceClipSchema = require('./Clips');
+// Define the schema for an embedded clip within the User model
+const embeddedClipSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  description: {
+    type: String,
+    trim: true
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
+  duration: {
+    type: Number, // duration in seconds
+    required: true
+  },
+  audioURL: {
+    type: String, // URL to the audio file
+    required: true
+  },
+  format: {
+    type: String,
+    enum: ['mp3', 'wav', 'ogg'], // acceptable audio formats
+    required: true
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  }
+});
 
+// Define the user schema, embedding `savedClips` as an array of `embeddedClipSchema`
 const userSchema = new Schema(
   {
     username: {
@@ -21,15 +53,9 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    // set savedClips to be an array of data that adheres to the voiceClipSchema
-    savedClips: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'VoiceClip'  // Reference to VoiceClip model
-      }
-    ],
+    // `savedClips` will now contain embedded clip data directly
+    savedClips: [embeddedClipSchema],
   },
-  // set this to use virtual below
   {
     toJSON: {
       virtuals: true,
@@ -37,7 +63,7 @@ const userSchema = new Schema(
   }
 );
 
-// hash user password
+// Hash the user password before saving
 userSchema.pre('save', async function (next) {
   if (this.isNew || this.isModified('password')) {
     const saltRounds = 10;
@@ -47,16 +73,17 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-// custom method to compare and validate password for logging in
+// Custom method to compare and validate password for logging in
 userSchema.methods.isCorrectPassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-// when we query a user, we'll also get another field called `clipCount` with the number of saved clips we have
+// Virtual field for getting the number of saved clips
 userSchema.virtual('clipCount').get(function () {
   return this.savedClips.length;
 });
 
+// Compile the User model
 const User = model('User', userSchema);
 
 module.exports = User;
