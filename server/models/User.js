@@ -29,11 +29,7 @@ const userSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'voiceclip',
     },
-  ],
-  clipCount: {
-    type: Number,
-    default: 0,
-  },
+  ]
 });
 
 userSchema.pre('save', async function (next) {
@@ -49,9 +45,6 @@ userSchema.methods.isCorrectPassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-const User = model('User', userSchema);
-
-module.exports = User;
 
 userSchema.virtual('clipCount').get(function () {
   return this.savedclips.length;

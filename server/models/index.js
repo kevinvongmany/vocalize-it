@@ -1,3 +1,4 @@
 const User = require('./User');
+const voiceclip = require('./voiceclips');
 
-module.exports = { User };
+module.exports = { User, voiceclip };
