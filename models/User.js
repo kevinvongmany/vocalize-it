@@ -19,10 +19,15 @@ const userSchema = new Schema({
     required: true,
     minlength: 5,
   },
-  thoughts: [
+  isSubscribed: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  savedclips: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Thought',
+      ref: 'voiceclip',
     },
   ],
 });
@@ -39,6 +44,14 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.isCorrectPassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
+
+const User = model('User', userSchema);
+
+module.exports = User;
+
+userSchema.virtual('clipCount').get(function () {
+  return this.savedclips.length;
+});
 
 const User = model('User', userSchema);
 
