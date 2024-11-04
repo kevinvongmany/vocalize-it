@@ -30,6 +30,10 @@ const userSchema = new Schema({
       ref: 'voiceclip',
     },
   ],
+  clipCount: {
+    type: Number,
+    default: 0,
+  },
 });
 
 userSchema.pre('save', async function (next) {
