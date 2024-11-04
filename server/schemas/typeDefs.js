@@ -3,6 +3,8 @@ const typeDefs = `
     _id: ID!
     username: String!
     email: String!
+    password: String!
+    isSubscribed: Boolean!
     savedClips: [Clip]!
     clipCount: Int
   }
