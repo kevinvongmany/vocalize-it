@@ -13,7 +13,7 @@ const voiceclip = new Schema({
   },
   // saved book id from GoogleBooks
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
@@ -36,4 +36,4 @@ const voiceclip = new Schema({
   },
 });
 
-mongoose.module.exports = voiceclip;
+module.exports = voiceclip;
