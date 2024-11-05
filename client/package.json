@@ -4,13 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "node server/server.js",
     "dev": "vite",
-    "build": "npm install && vite build",
-    "lint": "eslint .",
-    "install": "cd server && npm install",
-    "preview": "vite preview",
-    "seed": "cd server && npm run seed"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "mongodb": "^6.10.0",
