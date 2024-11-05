@@ -1,5 +1,8 @@
-const mongoose = require('mongoose');
-const voiceClipSchema = new mongoose.Schema({
+
+
+const { Schema, model } = require('mongoose');
+
+const voiceClipSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -10,7 +13,7 @@ const voiceClipSchema = new mongoose.Schema({
     trim: true
   },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User',  // assuming you have a User model
     required: true
   },
@@ -27,13 +30,10 @@ const voiceClipSchema = new mongoose.Schema({
     enum: ['mp3', 'wav', 'ogg'],  // acceptable audio formats
     required: true
   },
-  createdAt: {
+  date: {
     type: Date,
     default: Date.now
   },
-  tags: [{
-    type: String,  // to help categorize or search voice clips
-    trim: true
-  }]
 });
-module.exports = mongoose.model('VoiceClip', voiceClipSchema);
+
+module.exports = model('VoiceClip', voiceClipSchema);
