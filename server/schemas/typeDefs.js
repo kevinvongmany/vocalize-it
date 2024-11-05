@@ -3,21 +3,19 @@ const typeDefs = `
     _id: ID!
     username: String!
     email: String!
-    password: String!
-    isSubscribed: Boolean!
-    savedClips: [Clip]!
+    savedClips: [VoiceClip]!
     clipCount: Int
   }
 
-  type Clip {
+  type VoiceClip {
     _id: ID!
     title: String!
     description: String
     userId: ID!
     duration: Int!
-    audioUrl: String!
+    audioURL: String!
     format: String!
-    createdAt: String!
+    date: String!
     tags: [String]
   }
 
@@ -26,8 +24,23 @@ const typeDefs = `
     description: String
     userId: ID!
     duration: Int!
-    audioUrl: String!
+    audioURL: String!
     format: String!
+    tags: [String]
+  }
+
+  input UpdateUserInput {
+    username: String
+    email: String
+    password: String
+  }
+
+  input UpdateClipInput {
+    title: String
+    description: String
+    duration: Int
+    audioUrl: String
+    format: String
     tags: [String]
   }
 
@@ -35,7 +48,7 @@ const typeDefs = `
     users: [User]!
     user(username: String!): User
     me: User
-    searchClips(query: String!): [Clip]
+    getClips(username: String!): [VoiceClip]
   }
 
   type Mutation {
