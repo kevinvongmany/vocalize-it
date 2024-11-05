@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VocalizeIt</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1a1a2e;
+      color: #e5e5e5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      width: 80%;
+      max-width: 600px;
+      background-color: #2f2f4f;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 10px;
+    }
+    .navbar a {
+      color: #e5e5e5;
+      margin-left: 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    h2 {
+      text-align: center;
+    }
+    .control-group {
+      margin-bottom: 15px;
+    }
+    .control-group label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    .text-input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #555;
+      background-color: #333;
+      color: #e5e5e5;
+    }
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .button {
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+    }
+    .read-button {
+      background-color: #007bff;
+    }
+    .save-button {
+      background-color: #28a745;
+    }
+    .translate-button {
+      background-color: #f39c12;
+      margin-top: 10px;
+    }
+    select, input[type="range"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #555;
+      background-color: #333;
+      color: #e5e5e5;
+    }
+    .clips-list {
+      list-style: none;
+      padding: 0;
+    }
+    .clip-item {
+      background-color: #444;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    #myClipsContainer {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="#" onclick="showMainContainer()">VocalizeIt</a>
+    <div>
+      <a href="/login" id="loginLink">Login</a>
+      <a href="/signup" id="signupLink">Signup</a>
+      <a href="#" onclick="showMyClips()" id="myClipsLink" style="display:none;">My Clips</a>
+    </div>
+  </div>
+
+  <div class="container" id="mainContainer">
+    <h2>VocalizeIt</h2>
+
+    <div class="control-group">
+      <label for="text">Text to Convert:</label>
+      <textarea id="text" class="text-input" rows="4" placeholder="Enter text here..."></textarea>
+    </div>
+
+    <div class="control-group">
+      <label for="language">Translate To:</label>
+      <select id="language">
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="zh">Chinese</option>
+      </select>
+      <button class="button translate-button" onclick="translateText()">Translate</button>
+    </div>
+
+    <div class="control-group">
+      <label for="voice">Voice Selection:</label>
+      <select id="voice">
+        <option value="default">Default Voice</option>
+        <option value="voice1">Voice 1</option>
+        <option value="voice2">Voice 2</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="volume">Volume Control</label>
+      <input type="range" id="volume" min="0" max="100" value="50">
+    </div>
+
+    <div class="control-group">
+      <label for="speed">Voice Speed Control</label>
+      <input type="range" id="speed" min="0.5" max="2" step="0.1" value="1">
+    </div>
+
+    <div class="control-group">
+      <label for="pitch">Pitch Control</label>
+      <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1">
+    </div>
+
+    <div class="button-group">
+      <button class="button read-button" onclick="readText()">Read</button>
+      <button class="button save-button" onclick="saveAudio()">Save Voice Clip</button>
+    </div>
+  </div>
+
+  <!-- My Clips Section -->
+  <div class="container" id="myClipsContainer">
+    <h2>My Clips</h2>
+    <ul class="clips-list" id="clipsList">
+      <!-- Saved clips will be dynamically inserted here -->
+    </ul>
+    <button onclick="showMainContainer()">Back</button>
+  </div>
+
+  <script>
+    // Placeholder for logged-in user check
+    let isLoggedIn = true; // Change this to false if the user is not logged in
+
+    if (isLoggedIn) {
+      document.getElementById('loginLink').style.display = 'none';
+      document.getElementById('signupLink').style.display = 'none';
+      document.getElementById('myClipsLink').style.display = 'inline';
+    }
+
+    function showMainContainer() {
+      document.getElementById('mainContainer').style.display = 'block';
+      document.getElementById('myClipsContainer').style.display = 'none';
+    }
+
+    function showMyClips() {
+      document.getElementById('mainContainer').style.display = 'none';
+      document.getElementById('myClipsContainer').style.display = 'block';
+
+      // Fetch saved clips (example placeholder)
+      fetchMyClips();
+    }
+
+    async function fetchMyClips() {
+      const clipsList = document.getElementById('clipsList');
+      clipsList.innerHTML = ''; // Clear any existing clips
+
+      // Placeholder clips for demonstration
+      const clips = [
+        { title: 'Clip 1', description: 'This is my first clip', audioUrl: '#' },
+        { title: 'Clip 2', description: 'Another saved clip', audioUrl: '#' }
+      ];
+
+      clips.forEach(clip => {
+        const clipItem = document.createElement('li');
+        clipItem.className = 'clip-item';
+        clipItem.innerHTML = `
+          <strong>${clip.title}</strong><br>
+          ${clip.description}<br>
+          <a href="${clip.audioUrl}" target="_blank">Play</a>
+          <a href="${clip.audioUrl}" target="_blank">Download (subscription required)</a>
+        `;
+        clipsList.appendChild(clipItem);
+      });
+    }
+
+    function translateText() {
+      const text = document.getElementById('text').value;
+      const targetLang = document.getElementById('language').value;
+
+      if (!text) {
+        alert("Please enter text to translate.");
+        return;
+      }
+
+      alert(`Translating text to ${targetLang}...`);
+    }
+
+    function readText() {
+      const text = document.getElementById('text').value;
+      const volume = document.getElementById('volume').value / 100;
+      const speed = document.getElementById('speed').value;
+      const pitch = document.getElementById('pitch').value;
+
+      if (!text) {
+        alert("Please enter text to read.");
+        return;
+      }
+
+      const speech = new SpeechSynthesisUtterance(text);
+      speech.volume = volume;
+      speech.rate = speed;
+      speech.pitch = pitch;
+
+      window.speechSynthesis.speak(speech);
+    }
+
+    function saveAudio() {
+      alert("Save Audio feature is not yet implemented.");
+    }
+  </script>
+
+</body>
+</html>
