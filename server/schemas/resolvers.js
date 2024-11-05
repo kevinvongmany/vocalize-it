@@ -29,11 +29,14 @@ const resolvers = {
         .populate('savedClips'); // Populate the savedClips field (if necessary)
     },
 
-    // Get all clips
-    users: async () => {
-      return Clip.find({});
-    },
-    },
+    // Get all clips for logged on user
+    getClips: async (parent, args, context) => {
+      if (context.user) {
+        const user = await User.findById(context.user._id).select('savedClips');
+        return user ? user.savedClips : [];
+      }
+      throw new AuthenticationError('Not authenticated');
+    }
   },
 
   Mutation: {
@@ -79,7 +82,7 @@ const resolvers = {
       console.log(`saveClip called with paramater ${input}`); //For the benefit of our diagnostic logging
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
-          { _id: context.user._id },
+          context.user._id,
           { $addToSet: { savedClips: input } }, // Using addToSet to avoid duplicate entries
           { new: true, runValidators: true }
         ).populate('savedClips');
@@ -95,7 +98,7 @@ const resolvers = {
       console.log(`removeClips called with parameter ${voiceClipId}`); //For the benefit of our diagnostic logging
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
-          { _id: context.user._id },
+          context.user._id,
           { $pull: { savedClips: { voiceClipId } } }, // Pull the voiceClip with the matching clipId
           { new: true }
         ).populate('savedClips');

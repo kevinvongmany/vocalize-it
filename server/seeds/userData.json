@@ -9,20 +9,18 @@
         "description": "A classic Scooby-Doo laugh from the animated series.",
         "userId": "605c72d2f1dfb25b8c9f4a01",
         "duration": 8,
-        "audioUrl": "https://example.com/audio/scooby_laugh.mp3",
+        "audioURL": "https://example.com/audio/scooby_laugh.mp3",
         "format": "mp3",
-        "createdAt": "2024-10-30T12:00:00Z",
-        "tags": ["cartoon", "Scooby-Doo", "laugh", "classic"]
+        "date": "2024-10-30T12:00:00Z"
       },
       {
         "title": "Megatron Command",
         "description": "A famous Megatron line from Transformers.",
         "userId": "605c72d2f1dfb25b8c9f4a01",
         "duration": 12,
-        "audioUrl": "https://example.com/audio/megatron_command.mp3",
+        "audioURL": "https://example.com/audio/megatron_command.mp3",
         "format": "mp3",
-        "createdAt": "2024-10-31T08:30:00Z",
-        "tags": ["Transformers", "villain", "command"]
+        "date": "2024-10-31T08:30:00Z"
       }
     ]
   },
@@ -36,20 +34,18 @@
         "description": "Timmy wishes for a day off from school.",
         "userId": "605c72d2f1dfb25b8c9f4a02",
         "duration": 10,
-        "audioUrl": "https://example.com/audio/timmy_turner_wish.mp3",
+        "audioURL": "https://example.com/audio/timmy_turner_wish.mp3",
         "format": "mp3",
-        "createdAt": "2024-10-31T09:45:00Z",
-        "tags": ["Fairly OddParents", "Timmy Turner", "wish"]
+        "date": "2024-10-31T09:45:00Z"
       },
       {
         "title": "Raven Spell",
         "description": "Raven casting a powerful spell.",
         "userId": "605c72d2f1dfb25b8c9f4a02",
         "duration": 15,
-        "audioUrl": "https://example.com/audio/raven_spell.mp3",
+        "audioURL": "https://example.com/audio/raven_spell.mp3",
         "format": "mp3",
-        "createdAt": "2024-10-31T10:15:00Z",
-        "tags": ["Teen Titans", "Raven", "spell", "magic"]
+        "date": "2024-10-31T10:15:00Z"
       }
     ]
   }
