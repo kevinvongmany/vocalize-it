@@ -27,13 +27,9 @@ const voiceClipSchema = new mongoose.Schema({
     enum: ['mp3', 'wav', 'ogg'],  // acceptable audio formats
     required: true
   },
-  createdAt: {
+  date: {
     type: Date,
     default: Date.now
-  },
-  tags: [{
-    type: String,  // to help categorize or search voice clips
-    trim: true
-  }]
+  }
 });
 module.exports = mongoose.model('VoiceClip', voiceClipSchema);
