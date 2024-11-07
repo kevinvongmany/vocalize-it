@@ -18,6 +18,25 @@ const typeDefs = `
     date: String!
   }
 
+  type Checkout {
+    session: ID
+  }
+
+  type Product {  
+    _id: ID
+    name: String
+    description: String
+    price: Int
+  }
+
+  input ProductInput {
+    _id: ID
+    name: String
+    description: String
+    price: Int
+  }
+
+
   input SavedClipInput {
     title: String!
     description: String
@@ -46,6 +65,7 @@ const typeDefs = `
     user(username: String!): User
     me: User
     getClips(username: String!): [VoiceClip]
+    checkout(products: [ProductInput]!): Checkout
   }
 
   type Mutation {
