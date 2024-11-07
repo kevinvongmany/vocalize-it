@@ -6,17 +6,55 @@ const GenClips = () => {
   const [selectedVoiceType, setSelectedVoiceType] = useState("Male");
 
   const [volume, setVolume] = useState(10);
-  const [voiceSpeed, setVoiceSpeed] = useState(1);
+  const [voiceSpeed, setVoiceSpeed] = useState(9);
   const [pitch, setPitch] = useState(1);
   const [text, setText] = useState("");
+  const [translatedText, setTranslatedText] = useState("");
+
+  // New state for source and target languages
+  const [sourceLang, setSourceLang] = useState("en");
+  const [targetLang, setTargetLang] = useState("en");
+
+  const API_KEY = 'AIzaSyCMJ05_dwlQH6ipqi-7lOuxRcSQYw2-n2Q';
+
+  //Function to translate text using the translate API
+  const translateText = async (myText) => {
+    if (sourceLang === targetLang) {
+      console.log("Will not translate!");
+      setTranslatedText(myText);
+      return myText;
+    } else {
+      console.log("Translating..");
+      const url = `https://translation.googleapis.com/language/translate/v2?key=${API_KEY}&source=${sourceLang}&target=${targetLang}&q=${encodeURIComponent(myText)}`;
+
+      try {
+        const response = await axios.get(url);
+        const translatedText = response.data.data.translations[0].translatedText;
+        setTranslatedText(translatedText);
+        return translatedText;
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        return null;
+      }
+    }
+  }
 
   // Function to read text aloud using Web Speech API
   const readText = async () => {
     const XI_API_KEY = 'sk_1fa718e479887812560ae779d9acff5a07f721d8261d2837';
-    const VOICE_ID = 'pqHfZKP75CvOlQylNhV4';
+    let VOICE_ID = '';
 
-    if (!text) {
-      alert("Please enter text to read.");
+    if(selectedVoiceType === "Male") {
+      VOICE_ID = 'pqHfZKP75CvOlQylNhV4';
+    } else {
+      VOICE_ID = '9BWtsMINqrJLrRacOk9x';
+    };
+
+    const finalText = await translateText(text);
+    setTranslatedText(finalText);
+
+    if (!finalText) {
+      alert("Please enter text to be read or translated.");
       return;
     }
     
@@ -30,7 +68,7 @@ const GenClips = () => {
             "Content-Type": "application/json"
           },
           data: {
-            text: text,
+            text: finalText,
             model_id: "eleven_multilingual_v2",
             voice_settings: {
               stability: 0.9,
@@ -174,20 +212,25 @@ const GenClips = () => {
               Translation Options
             </summary>
             <div className="grid">
-              <select id="TranslateFrom">
-                <option value="en" disabled>
-                  Translate From
-                </option>
+              <label>Translate From</label>
+              <select
+                id="TranslateFrom"
+                value={sourceLang}
+                onChange={(e) => setSourceLang(e.target.value)}
+              >
                 <option value="en">English</option>
                 <option value="fr">French</option>
                 <option value="de">German</option>
                 <option value="ja">Japanese</option>
                 <option value="ar">Arabic</option>
               </select>
-              <select id="TranslateTo">
-                <option value="en" disabled>
-                  Translate To
-                </option>
+
+              <label>Translate To</label>
+              <select
+                id="TranslateTo"
+                value={targetLang}
+                onChange={(e) => setTargetLang(e.target.value)}
+              >
                 <option value="en">English</option>
                 <option value="fr">French</option>
                 <option value="de">German</option>
@@ -199,7 +242,8 @@ const GenClips = () => {
               <textarea
                 id="langOutput"
                 name="disabled"
-                value="Translated text will show here..."
+                value={translatedText}
+                onChange={(e) => setTranslatedText(e.target.value)}
                 disabled
               ></textarea>
             </section>
