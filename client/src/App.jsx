@@ -10,7 +10,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import './App.css'
 import { Outlet } from 'react-router-dom';
-
+import AppContext from './AppContext';
 
 
 const httpLink = createHttpLink({
@@ -38,10 +38,13 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
-      <Header/>
-      <Outlet />
-      {/* <Content/> */}
-      <Footer/>
+      <AppContext.Provider value={{
+        
+      }}>
+        <Header/>
+        <Outlet />
+        <Footer/>
+      </AppContext.Provider>
     </ApolloProvider>
   )
 }
