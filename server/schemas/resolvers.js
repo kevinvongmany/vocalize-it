@@ -83,7 +83,7 @@ const resolvers = {
 
     // Save a new clip to the user's savedClips array (if authenticated)
     saveClip: async (parent, { input }, context) => {
-      console.log(`saveClip called with paramater ${input}`); //For the benefit of our diagnostic logging
+      console.log(`saveClip called with parameter ${input}`); //For the benefit of our diagnostic logging
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,

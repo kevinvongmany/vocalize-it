@@ -31,6 +31,7 @@ const typeDefs = `
     duration: Int!
     audioURL: String!
     format: String!
+    date: String!
   }
 
   input UpdateUserInput {
@@ -45,7 +46,7 @@ const typeDefs = `
     duration: Int
     audioUrl: String
     format: String
-    tags: [String]
+    date: String!
   }
 
   type Query {

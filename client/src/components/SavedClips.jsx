@@ -12,8 +12,6 @@ const SavedClips = () => {
     // State to hold the list of clips
     const [clips, setClips] = useState([]);
 
-    //const [username, setUsername] = useState("");
-
     // Fetch user data from the GraphQL server
     const { loading: loadingUser, data:userData } = useQuery(QUERY_ME, {
         skip: !Auth.loggedIn(), // Only run if logged in
