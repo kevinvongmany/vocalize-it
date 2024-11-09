@@ -38,7 +38,7 @@ export const LOGIN = gql`
           description
           userId
           duration
-          audioUrl
+          audioURL
           format
           date
         }
@@ -60,7 +60,7 @@ export const SAVE_CLIP = gql`
         description
         userId
         duration
-        audioUrl
+        audioURL
         format
         date
       }      
@@ -81,11 +81,21 @@ export const REMOVE_CLIP = gql`
         description
         userId
         duration
-        audioUrl
+        audioURL
         format
         date
       }      
       clipCount
     }
   }  
-`;  
+`;
+
+export const SAVE_AUDIO = gql`
+mutation SaveAudio($audioData: String!) {
+  saveAudio(audioData: $audioData) {
+    success
+    message
+    fileUrl
+  }
+}
+`;

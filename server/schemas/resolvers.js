@@ -1,7 +1,8 @@
 //Setup our imports
 const { User } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
-const stripe = require('stripe')('sk_API_KEY-NEEDED');
+const path = require('path');
+const fs = require('fs');
 
 const resolvers = {
   Query: {
@@ -12,6 +13,7 @@ const resolvers = {
     
     //Get the details of the logged-in user
     me: async (parent, args, context) => {
+      console.log('query me called');
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
           .select('-__v -password') //Exclude the version key
@@ -20,7 +22,7 @@ const resolvers = {
         return userData;
       }
 
-      throw new AuthenticationError;
+      throw new AuthenticationError('Not authenticated');
     },
 
     // Get a single user by their username
@@ -31,48 +33,14 @@ const resolvers = {
     },
 
     // Get all clips for logged on user
-    getClips: async (parent, args, context) => {
+    getClips: async (parent, { username }, context) => {
       if (context.user) {
         const user = await User.findById(context.user._id).select('savedClips');
         return user ? user.savedClips : [];
       }
       throw new AuthenticationError('Not authenticated');
-    },
-    checkout: async (parent, args, context) => {
-      const url = new URL(context.headers.referer).origin;
-      // We map through the list of products sent by the client to extract the _id of each item and create a new Order.
-      await Order.create({ products: args.products.map(({ _id }) => _id) });
-      const line_items = [];
-
-      for (const product of args.products) {
-        line_items.push({
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: product.name,
-              description: product.description,
-              images: [`${url}/images/${product.image}`],
-            },
-            unit_amount: product.price * 100,
-          },
-          quantity: product.purchaseQuantity,
-        });
-      }
-
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items,
-        mode: 'payment',
-        success_url: `${url}/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${url}/`,
-      });
-
-      return { session: session.id };
-    },
+    }
   },
- 
-
-
 
   Mutation: {
     // Create a new user and return auth token
@@ -89,7 +57,7 @@ const resolvers = {
         return { token, user };
       } catch (err) {
         console.error("Error in createUser resolver:", err);
-        throw new AuthenticationError;
+        throw new AuthenticationError('Not authenticated');
       }
     },
 
@@ -99,16 +67,17 @@ const resolvers = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        //throw new AuthenticationError('Incorrect email or username');
+        throw new AuthenticationError('Incorrect email or username');
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError;
+        throw new AuthenticationError('Incorrect password');;
       }
 
       const token = signToken(user);
+      console.log(token);
       return { token, user };
     },
 
@@ -125,23 +94,56 @@ const resolvers = {
         return updatedUser;
       }
 
-      throw new AuthenticationError;
+      throw new AuthenticationError('Not authenticated');
     },
 
     // Delete a clip from the user's savedClips array (if authenticated)
     removeClip: async (parent, { clipId }, context) => {
-      console.log(`removeClips called with parameter ${voiceClipId}`); //For the benefit of our diagnostic logging
+      console.log(`removeClips called with parameter ${clipId}`); //For the benefit of our diagnostic logging
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
-          { $pull: { savedClips: { voiceClipId } } }, // Pull the voiceClip with the matching clipId
+          { $pull: { savedClips: { _id: clipId } } }, // Pull the voiceClip with the matching clipId
           { new: true }
         ).populate('savedClips');
+        console.log(updatedUser);
 
         return updatedUser;
       }
 
-      throw new AuthenticationError;
+      throw new AuthenticationError('Not authenticated');
+    },
+
+    saveAudio: async (_, { audioData }) => {
+      console.log("Mutation: saveAudio called");
+      try {
+        // Decode the base64 audio data
+        const buffer = Buffer.from(audioData, 'base64');
+        
+        // Define a file path where the audio will be saved
+        const fileName = `audio_${Date.now()}.mp3`;
+        const filePath = path.join(__dirname, '..', 'uploads', fileName);
+        console.log(`Uploads path is: ${filePath}`);
+
+        // Save the audio file to the server
+        fs.writeFileSync(filePath, buffer);
+
+        // Generate a URL for the saved file (assumes static file serving)
+        const fileUrl = `http://localhost:3001/uploads/${fileName}`;
+
+        return {
+          success: true,
+          message: "Audio saved successfully!",
+          fileUrl: fileUrl,
+        };
+      } catch (error) {
+        console.error('Error saving audio:', error);
+        return {
+          success: false,
+          message: "Failed to save audio.",
+          fileUrl: null,
+        };
+      }
     },
 
   },
