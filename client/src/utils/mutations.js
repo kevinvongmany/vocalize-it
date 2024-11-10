@@ -100,11 +100,9 @@ mutation SaveAudio($audioData: String!) {
 }`;  
 
 export const UPDATE_SUBSCRIPTION = gql`
-mutation UpdateSubscription($subscribed: Boolean!) {
-  updateSubscription(subscribed: $subscribed) {
+mutation UpdateSubscription($isSubscribed: Boolean!) {
+  updateSubscription(isSubscribed: $isSubscribed) {
     _id
-    username
-    email
-    subscribed
+    isSubscribed
   }
 }`;

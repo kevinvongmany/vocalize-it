@@ -32,10 +32,6 @@ const router = createBrowserRouter([
         path: '/subscribe',
         element: <SubscriptionForm />
       },
-      // {
-      //   path: '*',
-      //   element: <NotFound />
-      // }
     ]
   }
 ])
