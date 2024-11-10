@@ -18,24 +18,11 @@ const typeDefs = `
     date: String!
   }
 
-  type Checkout {
-    session: ID
+  type SaveAudioResponse {
+    success: Boolean!
+    message: String
+    fileUrl: String
   }
-
-  type Product {  
-    _id: ID
-    name: String
-    description: String
-    price: Int
-  }
-
-  input ProductInput {
-    _id: ID
-    name: String
-    description: String
-    price: Int
-  }
-
 
   input SavedClipInput {
     title: String!
@@ -44,6 +31,7 @@ const typeDefs = `
     duration: Int!
     audioURL: String!
     format: String!
+    date: String!
   }
 
   input UpdateUserInput {
@@ -58,6 +46,7 @@ const typeDefs = `
     duration: Int
     audioUrl: String
     format: String
+    date: String!
   }
 
   type Query {
@@ -65,7 +54,6 @@ const typeDefs = `
     user(username: String!): User
     me: User
     getClips(username: String!): [VoiceClip]
-    checkout(products: [ProductInput]!): Checkout
   }
 
   type Mutation {
@@ -73,6 +61,7 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
     removeClip(clipId: ID!): User
     saveClip(input: SavedClipInput!): User
+    saveAudio(audioData: String!): SaveAudioResponse!
   }
 
   type Auth {
