@@ -89,3 +89,14 @@ export const REMOVE_CLIP = gql`
     }
   }  
 `;  
+
+export const UPDATE_SUBSCRIPTION = gql`
+  mutation UpdateSubscription($subscribed: Boolean!) {
+    updateSubscription(subscribed: $subscribed) {
+      _id
+      username
+      email
+      subscribed
+    }
+  }
+`;

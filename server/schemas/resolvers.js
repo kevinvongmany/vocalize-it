@@ -1,7 +1,7 @@
 //Setup our imports
 const { User } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
-const stripe = require('stripe')('sk_API_KEY-NEEDED');
+const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 const resolvers = {
   Query: {
@@ -143,6 +143,22 @@ const resolvers = {
 
       throw new AuthenticationError;
     },
+
+    // Update the user's subscription status
+    updateSubscription: async (parent, { subscribed }, context) => {
+      console.log(`updateSubscription called with parameter ${subscribed}`); //For the benefit of our diagnostic logging
+      if (context.user) {
+        const updatedUser = await User.findByIdAndUpdate(
+          context.user._id,
+          { subscribed },
+          { new: true }
+        );
+
+        return updatedUser;
+      }
+
+      throw new AuthenticationError;
+    }
 
   },
 };
