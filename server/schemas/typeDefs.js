@@ -5,6 +5,7 @@ const typeDefs = `
     email: String!
     savedClips: [VoiceClip]!
     clipCount: Int
+    isSubscribed: Boolean
   }
 
   type VoiceClip {
@@ -62,6 +63,7 @@ const typeDefs = `
     removeClip(clipId: ID!): User
     saveClip(input: SavedClipInput!): User
     saveAudio(audioData: String!): SaveAudioResponse!
+    updateSubscription(isSubscribed: Boolean!): User
   }
 
   type Auth {

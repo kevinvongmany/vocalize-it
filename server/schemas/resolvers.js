@@ -115,19 +115,37 @@ const resolvers = {
     },
 
     // Update the user's subscription status
-    updateSubscription: async (parent, { subscribed }, context) => {
-      console.log(`updateSubscription called with parameter ${subscribed}`); //For the benefit of our diagnostic logging
+    updateSubscription: async (parent, { isSubscribed }, context) => {
+      console.log(`updateSubscription called with parameter ${isSubscribed}`); //For the benefit of our diagnostic logging
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'aud',
+              product_data: {
+                name: 'Premium Subscription',
+              },
+              unit_amount: 1000,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: 'https://google.com.au',
+        cancel_url: 'https://google.com.au',
+      });
+
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
-          { subscribed },
+          { isSubscribed },
           { new: true }
         );
 
-        return updatedUser;
+        return { ...updatedUser, sessionId: session.id };
       }
 
-      throw new AuthenticationError;
     }
 
   },
