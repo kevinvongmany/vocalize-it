@@ -17,7 +17,7 @@ const SubscriptionForm = () => {
     }
   )
   const handleSubmitCheckout = async (e) => {
-    subscribe({ variables: { isSubscribed: true, _id: localStorage.getItem('id_token') } })
+    subscribe({ variables: { isSubscribed: true } })
   }
    
   useEffect(() => {
