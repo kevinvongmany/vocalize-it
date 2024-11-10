@@ -1,4 +1,6 @@
 const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const path = require('path');
@@ -9,6 +11,13 @@ const db = require('./config/connection');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
+
+// Enable CORS for all origins
+app.use(cors());
+
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -23,7 +32,7 @@ const startApolloServer = async () => {
   
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
-  
+
   app.use('/graphql', expressMiddleware(server, {
     context: authMiddleware
   }));

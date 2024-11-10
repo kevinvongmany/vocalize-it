@@ -1,6 +1,8 @@
 //Setup our imports
 const { User } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
+const path = require('path');
+const fs = require('fs');
 const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 const resolvers = {
@@ -12,6 +14,7 @@ const resolvers = {
     
     //Get the details of the logged-in user
     me: async (parent, args, context) => {
+      console.log('query me called');
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
           .select('-__v -password') //Exclude the version key
@@ -20,7 +23,7 @@ const resolvers = {
         return userData;
       }
 
-      throw new AuthenticationError;
+      throw new AuthenticationError('Not authenticated');
     },
 
     // Get a single user by their username
@@ -31,48 +34,14 @@ const resolvers = {
     },
 
     // Get all clips for logged on user
-    getClips: async (parent, args, context) => {
+    getClips: async (parent, { username }, context) => {
       if (context.user) {
         const user = await User.findById(context.user._id).select('savedClips');
         return user ? user.savedClips : [];
       }
       throw new AuthenticationError('Not authenticated');
-    },
-    checkout: async (parent, args, context) => {
-      const url = new URL(context.headers.referer).origin;
-      // We map through the list of products sent by the client to extract the _id of each item and create a new Order.
-      await Order.create({ products: args.products.map(({ _id }) => _id) });
-      const line_items = [];
-
-      for (const product of args.products) {
-        line_items.push({
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: product.name,
-              description: product.description,
-              images: [`${url}/images/${product.image}`],
-            },
-            unit_amount: product.price * 100,
-          },
-          quantity: product.purchaseQuantity,
-        });
-      }
-
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items,
-        mode: 'payment',
-        success_url: `${url}/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${url}/`,
-      });
-
-      return { session: session.id };
-    },
+    }
   },
- 
-
-
 
   Mutation: {
     // Create a new user and return auth token
@@ -89,7 +58,7 @@ const resolvers = {
         return { token, user };
       } catch (err) {
         console.error("Error in createUser resolver:", err);
-        throw new AuthenticationError;
+        throw new AuthenticationError('Not authenticated');
       }
     },
 
@@ -99,22 +68,23 @@ const resolvers = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        //throw new AuthenticationError('Incorrect email or username');
+        throw new AuthenticationError('Incorrect email or username');
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError;
+        throw new AuthenticationError('Incorrect password');;
       }
 
       const token = signToken(user);
+      console.log(token);
       return { token, user };
     },
 
     // Save a new clip to the user's savedClips array (if authenticated)
     saveClip: async (parent, { input }, context) => {
-      console.log(`saveClip called with paramater ${input}`); //For the benefit of our diagnostic logging
+      console.log(`saveClip called with parameter ${input}`); //For the benefit of our diagnostic logging
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
@@ -125,16 +95,16 @@ const resolvers = {
         return updatedUser;
       }
 
-      throw new AuthenticationError;
+      throw new AuthenticationError('Not authenticated');
     },
 
     // Delete a clip from the user's savedClips array (if authenticated)
     removeClip: async (parent, { clipId }, context) => {
-      console.log(`removeClips called with parameter ${voiceClipId}`); //For the benefit of our diagnostic logging
+      console.log(`removeClips called with parameter ${clipId}`); //For the benefit of our diagnostic logging
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
-          { $pull: { savedClips: { voiceClipId } } }, // Pull the voiceClip with the matching clipId
+          { $pull: { savedClips: { _id: clipId } } }, // Pull the voiceClip with the matching clipId
           { new: true }
         ).populate('savedClips');
 
