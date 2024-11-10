@@ -31,6 +31,7 @@ const Login = () => {
     }
 
     try {
+      console.log(`Attempting to login user ${userFormData.email}`);
       //Execute the LOGIN_USER mutation
       const { data } = await gqlmloginUser({
         variables: { ...userFormData },
