@@ -131,7 +131,7 @@ const resolvers = {
             quantity: 1,
           },
         ],
-        mode: 'payment',
+        mode: 'subscription',
         success_url: 'https://google.com.au',
         cancel_url: 'https://google.com.au',
       });
