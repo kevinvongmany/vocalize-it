@@ -2,6 +2,8 @@
 const { User } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const fs = require('fs');
+const path = require('path');
 
 const resolvers = {
   Query: {
