@@ -2,6 +2,8 @@
 const { User } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const fs = require('fs');
+const path = require('path');
 
 const resolvers = {
   Query: {
@@ -144,6 +146,40 @@ const resolvers = {
 
       throw new AuthenticationError;
     },
+
+    saveAudio: async (_, { audioData }) => {
+      console.log("Mutation: saveAudio called");
+      const serverUrl = process.env.SERVER_API;
+      try {
+        // Decode the base64 audio data
+        const buffer = Buffer.from(audioData, 'base64');
+        
+        // Define a file path where the audio will be saved
+        const fileName = `audio_${Date.now()}.mp3`;
+        const filePath = path.join(__dirname, '..', 'uploads', fileName);
+
+        // Save the audio file to the server
+        fs.writeFileSync(filePath, buffer);
+
+        // Generate a URL for the saved file (assumes static file serving)
+        const fileUrl = `${serverUrl}/uploads/${fileName}`;
+        console.log(`Saving file to: ${fileUrl}`);
+
+        return {
+          success: true,
+          message: "Audio saved successfully!",
+          fileUrl: fileUrl,
+        };
+      } catch (error) {
+        console.error('Error saving audio:', error);
+        return {
+          success: false,
+          message: "Failed to save audio.",
+          fileUrl: null,
+        };
+      }
+    },
+
   },
 };
 

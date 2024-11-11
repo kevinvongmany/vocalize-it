@@ -1,4 +1,5 @@
 const express = require('express');
+const dotenv = require('dotenv').config();
 const cors = require('cors');
 const fs = require('fs');
 const { ApolloServer } = require('@apollo/server');
@@ -11,6 +12,7 @@ const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 
 const PORT = process.env.PORT || 3001;
+const serverAPI = process.env.VITE_SERVER_API;
 const app = express();
 
 
@@ -51,7 +53,7 @@ const startApolloServer = async () => {
 
   db.once('open', () => {
     app.listen(PORT, () => {
-      console.log(`API server running on port ${PORT}!`);
+      console.log(`API server ${serverAPI} running on port ${PORT}!`);
       console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
     });
   });
