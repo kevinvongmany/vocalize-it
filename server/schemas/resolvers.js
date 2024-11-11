@@ -1,8 +1,7 @@
 //Setup our imports
 const { User } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
-const path = require('path');
-const fs = require('fs');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const resolvers = {
   Query: {
@@ -39,6 +38,39 @@ const resolvers = {
         return user ? user.savedClips : [];
       }
       throw new AuthenticationError('Not authenticated');
+    },
+    // Get user's subscription status
+    getSubscription: async (parent, args, context) => {
+      const url = new URL(context.headers.referer).origin;
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'aud',
+              product_data: {
+                name: 'Premium Subscription',
+              },
+              unit_amount: 1000,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${url}`,
+        cancel_url: `${url}/subscribe`,
+      });
+
+      if (context.user) {
+        await User.findByIdAndUpdate(
+          context.user._id,
+          { isSubscribed: true },
+          { new: true }
+        );
+        console.log(session.id);
+        return { sessionId: session.id };
+      }
+
     }
   },
 
@@ -106,46 +138,12 @@ const resolvers = {
           { $pull: { savedClips: { _id: clipId } } }, // Pull the voiceClip with the matching clipId
           { new: true }
         ).populate('savedClips');
-        console.log(updatedUser);
 
         return updatedUser;
       }
 
-      throw new AuthenticationError('Not authenticated');
+      throw new AuthenticationError;
     },
-
-    saveAudio: async (_, { audioData }) => {
-      console.log("Mutation: saveAudio called");
-      try {
-        // Decode the base64 audio data
-        const buffer = Buffer.from(audioData, 'base64');
-        
-        // Define a file path where the audio will be saved
-        const fileName = `audio_${Date.now()}.mp3`;
-        const filePath = path.join(__dirname, '..', 'uploads', fileName);
-        console.log(`Uploads path is: ${filePath}`);
-
-        // Save the audio file to the server
-        fs.writeFileSync(filePath, buffer);
-
-        // Generate a URL for the saved file (assumes static file serving)
-        const fileUrl = `http://localhost:3001/uploads/${fileName}`;
-
-        return {
-          success: true,
-          message: "Audio saved successfully!",
-          fileUrl: fileUrl,
-        };
-      } catch (error) {
-        console.error('Error saving audio:', error);
-        return {
-          success: false,
-          message: "Failed to save audio.",
-          fileUrl: null,
-        };
-      }
-    },
-
   },
 };
 
