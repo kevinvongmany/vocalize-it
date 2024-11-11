@@ -15,17 +15,17 @@ const NavBar = () => {
 
   return (
     <nav className="navbar">
-      <div className="mx-4">
-      {isSubscribed ? (
-          <p>Thanks for subscribing</p>
-       ) :
-       (
-          <Link to="/subscribe">Please Subscribe!</Link>
-       ) }
-        </div>
       
       {loggedIn ? (
         <>
+      <div className="mx-4">
+        {isSubscribed ? (
+            <p>Thanks for subscribing</p>
+         ) :
+         (
+            <Link to="/subscribe">Please Subscribe!</Link>
+         ) }
+          </div>
         <Link to="/saved">&nbsp;Saved Clips</Link>
         <Link onClick={Auth.logout}>&nbsp;Logout</Link>
         </>

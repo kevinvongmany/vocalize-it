@@ -6,13 +6,13 @@ import {
   createHttpLink
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context'
-import Auth from './utils/auth';
 
 import Header from './components/Header'
 import Footer from './components/Footer'
 import './App.css'
 import { Outlet } from 'react-router-dom';
 import AppContext from './AppContext';
+import Auth from './utils/auth';
 
 
 const httpLink = createHttpLink({
