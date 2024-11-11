@@ -41,12 +41,12 @@ const Register = ( ) => {
   };
 
   return (
-      <div className="p-4 mx-12 w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-        <h1 className="text-left text-xl mt-8 ml-1 font-semibold text-gray-900 dark:text-white">
+      <div className="p-4 mx-12 mb-4 w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <h1 className="text-left text-xl mt-4 ml-2 font-semibold text-gray-900 dark:text-white">
           Register for an account
         </h1>
         <form onSubmit={handleFormSubmit} className="mt-10 flex flex-col w-full space-y-6">
-        <div className="w-full">
+        <div className="w-full px-2">
             <label htmlFor="email" className="block mb-2 text-sm ml-1 font-medium text-gray-900 dark:text-gray-300 text-left">
               Username
             </label>
@@ -61,7 +61,7 @@ const Register = ( ) => {
               required
             />
           </div>
-          <div className="w-full">
+          <div className="w-full px-2">
             <label htmlFor="email" className="block mb-2 text-sm ml-1 font-medium text-gray-900 dark:text-gray-300 text-left">
               Your email
             </label>
@@ -76,7 +76,7 @@ const Register = ( ) => {
               required
             />
           </div>
-          <div>
+          <div className="w-full px-2">
             <label htmlFor="password" className="block mb-2 ml-1 text-sm font-medium text-gray-900 dark:text-gray-300 text-left">
               Password
             </label>
@@ -91,10 +91,12 @@ const Register = ( ) => {
               required
             />
           </div>
+          <div className="p-4">
 
           <button type="submit" className="text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
             Register
           </button>
+          </div>
         </form>
       </div>
   )
