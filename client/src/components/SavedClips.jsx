@@ -73,8 +73,23 @@ const SavedClips = () => {
         };
     }
 
-    const downloadClip = async (audioUrl) => {
-        alert('Not implemented as yet')
+    const downloadClip = async (audioUrl, filename = 'audio-clip.mp3') => {
+        const serverUrl = `http://localhost:3001/${audioUrl}`;
+        try {
+            const response = await fetch(serverUrl);
+            if (!response.ok) throw new Error('Failed to fetch audio data');
+
+            const fileData = await response.blob();
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(fileData);
+            link.download = filename;
+            link.click();
+            
+            // Clean up the URL object after download to avoid memory leaks
+            URL.revokeObjectURL(link.href);
+        } catch (error) {
+            console.error("Error downloading audio:", error);
+        }
     }
 
     if (loadingUser || loadingClips) return <p>Loading...</p>;
@@ -92,7 +107,7 @@ const SavedClips = () => {
                     </div>
                     <div className="Button-group">
                         <button onClick={() => playClip(clip.audioURL)}>Play</button>
-                        <button onClick={() => downloadClip(clip.audioURL)}>Download (subscription required)</button>
+                        <button onClick={() => downloadClip(clip.audioURL, `${clip.title}.mp3`)}>Download (subscription required)</button>
                         <button onClick={() => handleRemove(clip._id)}>Delete</button>
                     </div>
                 </li>
