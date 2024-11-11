@@ -53,8 +53,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center mb-6 text-base font-semibold text-gray-900 dark:text-white">
-      <div className="p-4 w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+      <div className="p-4 mx-12 w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <h1 className="text-left text-xl mt-8 ml-1 font-semibold text-gray-900 dark:text-white">
           Sign in to your account
         </h1>
@@ -103,12 +102,8 @@ const Login = () => {
           <button type="submit" className="text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
             Sign in
           </button>
-          <p className="text-center text-sm text-gray-400 mt-4">
-            Don't have an account yet? <a href="#" className="text-blue-500 hover:underline">Sign up</a>
-          </p>
         </form>
       </div>
-    </div>
   );
 };
 
