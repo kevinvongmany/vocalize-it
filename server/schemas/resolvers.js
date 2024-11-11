@@ -1,9 +1,7 @@
 //Setup our imports
 const { User } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
-const path = require('path');
-const fs = require('fs');
-const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const resolvers = {
   Query: {
@@ -40,6 +38,39 @@ const resolvers = {
         return user ? user.savedClips : [];
       }
       throw new AuthenticationError('Not authenticated');
+    },
+    // Get user's subscription status
+    getSubscription: async (parent, args, context) => {
+      const url = new URL(context.headers.referer).origin;
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'aud',
+              product_data: {
+                name: 'Premium Subscription',
+              },
+              unit_amount: 1000,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${url}`,
+        cancel_url: `${url}/subscribe`,
+      });
+
+      if (context.user) {
+        await User.findByIdAndUpdate(
+          context.user._id,
+          { isSubscribed: true },
+          { new: true }
+        );
+        console.log(session.id);
+        return { sessionId: session.id };
+      }
+
     }
   },
 
@@ -113,41 +144,6 @@ const resolvers = {
 
       throw new AuthenticationError;
     },
-
-    // Update the user's subscription status
-    updateSubscription: async (parent, { isSubscribed }, context) => {
-      console.log(`updateSubscription called with parameter ${isSubscribed}`); //For the benefit of our diagnostic logging
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: [
-          {
-            price_data: {
-              currency: 'aud',
-              product_data: {
-                name: 'Premium Subscription',
-              },
-              unit_amount: 1000,
-            },
-            quantity: 1,
-          },
-        ],
-        mode: 'payment',
-        success_url: 'https://google.com.au',
-        cancel_url: 'https://google.com.au',
-      });
-
-      if (context.user) {
-        const updatedUser = await User.findByIdAndUpdate(
-          context.user._id,
-          { isSubscribed: true },
-          { new: true }
-        );
-
-        return { ...updatedUser, sessionId: session.id };
-      }
-
-    }
-
   },
 };
 

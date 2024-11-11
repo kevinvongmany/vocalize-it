@@ -25,6 +25,10 @@ const typeDefs = `
     fileUrl: String
   }
 
+  type Checkout {
+    sessionId: ID
+  }
+
   input SavedClipInput {
     title: String!
     description: String
@@ -55,6 +59,7 @@ const typeDefs = `
     user(username: String!): User
     me: User
     getClips(username: String!): [VoiceClip]
+    getSubscription: Checkout
   }
 
   type Mutation {
@@ -63,7 +68,6 @@ const typeDefs = `
     removeClip(clipId: ID!): User
     saveClip(input: SavedClipInput!): User
     saveAudio(audioData: String!): SaveAudioResponse!
-    updateSubscription(isSubscribed: Boolean!): User
   }
 
   type Auth {
