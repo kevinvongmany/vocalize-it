@@ -50,9 +50,10 @@ const SavedClips = () => {
     //Function that plays the audio data from the play link
     const playClip = async (audioUrl) => {
         // Construct the full server URL
-        const serverhost = 'localhost';
-        const serverport = '3001';
-        const serverUrl = `http://${serverhost}:${serverport}`;
+        //const serverhost = 'localhost';
+        //const serverport = '3001';
+        //const serverUrl = `http://${serverhost}:${serverport}`;
+        const serverUrl = import.meta.env.VITE_SERVER_API;
         const fullURL = `${serverUrl}/${audioUrl}`
         console.log(`Attempting to play: ${fullURL}`)
         try {

@@ -116,6 +116,7 @@ const resolvers = {
 
     saveAudio: async (_, { audioData }) => {
       console.log("Mutation: saveAudio called");
+      const serverUrl = process.env.SERVER_API;
       try {
         // Decode the base64 audio data
         const buffer = Buffer.from(audioData, 'base64');
@@ -123,13 +124,13 @@ const resolvers = {
         // Define a file path where the audio will be saved
         const fileName = `audio_${Date.now()}.mp3`;
         const filePath = path.join(__dirname, '..', 'uploads', fileName);
-        console.log(`Uploads path is: ${filePath}`);
 
         // Save the audio file to the server
         fs.writeFileSync(filePath, buffer);
 
         // Generate a URL for the saved file (assumes static file serving)
-        const fileUrl = `http://localhost:3001/uploads/${fileName}`;
+        const fileUrl = `${serverUrl}/uploads/${fileName}`;
+        console.log(`Saving file to: ${fileUrl}`);
 
         return {
           success: true,
