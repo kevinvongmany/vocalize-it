@@ -6,7 +6,6 @@ import {
   createHttpLink
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context'
-import Auth from './utils/auth';
 
 import Header from './components/Header'
 import Footer from './components/Footer'
