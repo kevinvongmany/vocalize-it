@@ -3,7 +3,7 @@
     "username": "frank_welker",
     "email": "frank.welker@gmail.com",
     "password": "password12345",
-    "isSubscribed": true,
+    "isSubscribed": false,
     "savedClips": [
       {
         "title": "Scooby-Doo Laugh",
@@ -29,7 +29,7 @@
     "username": "tara_strong",
     "email": "tara.strong@yahoo.com",
     "password": "password12345",
-    "isSubscribed": true,
+    "isSubscribed": false,
     "savedClips": [
       {
         "title": "Miss Minutes",

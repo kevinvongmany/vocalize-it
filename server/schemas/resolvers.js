@@ -131,7 +131,7 @@ const resolvers = {
             quantity: 1,
           },
         ],
-        mode: 'subscription',
+        mode: 'payment',
         success_url: 'https://google.com.au',
         cancel_url: 'https://google.com.au',
       });
@@ -139,7 +139,7 @@ const resolvers = {
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
-          { isSubscribed },
+          { isSubscribed: true },
           { new: true }
         );
 

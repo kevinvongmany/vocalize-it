@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { UPDATE_SUBSCRIPTION } from '../utils/mutations'
-import { useMutation } from '@apollo/client'
+import { useMutation, useLazyQuery } from '@apollo/client'
 import { loadStripe } from '@stripe/stripe-js'
-import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js'
+// import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js'
 
 const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx')
 
@@ -16,6 +16,7 @@ const SubscriptionForm = () => {
       }
     }
   )
+  
   const handleSubmitCheckout = async (e) => {
     subscribe({ variables: { isSubscribed: true } })
   }
