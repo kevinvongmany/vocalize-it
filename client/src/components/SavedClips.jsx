@@ -46,15 +46,13 @@ const SavedClips = () => {
             console.error("Error deleting clip:", error);
         }
     };
-
+    const serverUrl = import.meta.env.VITE_SERVER_API;
     //Function that plays the audio data from the play link
     const playClip = async (audioUrl) => {
         // Construct the full server URL
-        //const serverhost = 'localhost';
-        //const serverport = '3001';
-        //const serverUrl = `http://${serverhost}:${serverport}`;
-        const serverUrl = import.meta.env.VITE_SERVER_API;
+
         const fullURL = `${serverUrl}/${audioUrl}`
+
         console.log(`Attempting to play: ${fullURL}`)
         try {
             // Fetch the audio data from the provided URL
@@ -75,9 +73,9 @@ const SavedClips = () => {
     }
 
     const downloadClip = async (audioUrl, filename = 'audio-clip.mp3') => {
-        const serverUrl = `http://localhost:3001/${audioUrl}`;
         try {
-            const response = await fetch(serverUrl);
+            const fullURL = `${serverUrl}/${audioUrl}`
+            const response = await fetch(fullURL);
             if (!response.ok) throw new Error('Failed to fetch audio data');
 
             const fileData = await response.blob();
