@@ -15,6 +15,8 @@ Vocalise-It is a powerful web app that seamlessly combines text-to-speech and te
 
 To install the application locally, you will need to clone the repository to your local machine. You will also need to have `Node.js` & `npm` installed. 
 
+You will also need a [Stripe](https://stripe.com/) account for payment processing. You will need to create a new account and obtain a secret key. This key will be used in the `.env` file to allow the application to communicate with the Stripe API.
+
 ```bash
 git clone https://github.com/kevinvongmany/vocalize-it.git
 ```
@@ -84,10 +86,10 @@ Mutations:
 
 ## Contributing
 All code either supplied, or refactored from various sources, by the programming team of  
-Jamie Qin,  
-Kevin Vongmany,  
-Warren Shan and  
-Adrianna Janikova
+* [Jamie Qin](https://github.com/giacoomoo)
+* [Kevin Vongmany](https://github.com/kevinvongmany)
+* [Warren Shan](https://github.com/shanwc1972)
+* [Adriana Janikova](https://github.com/adrianajani)
   
 ## License
-MIT License
+[MIT License](LICENSE)
