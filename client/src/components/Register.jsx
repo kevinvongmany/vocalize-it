@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CREATE_USER } from '../utils/mutations'
 import { useMutation } from '@apollo/client'
 import Auth from '../utils/auth'
+import { toast } from 'react-toastify'
 
 const Register = ( ) => {
   const [registerFormData, setRegisterFormData] = useState({ email: '', password: '', username: '' });
@@ -31,6 +32,7 @@ const Register = ( ) => {
       Auth.login(token);
     } catch (err) {
       console.error(err);
+      toast.error('Something went wrong, please try again!');
     }
 
     setRegisterFormData({

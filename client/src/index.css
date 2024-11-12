@@ -19,16 +19,7 @@
     list-style: none;
     padding: 0;
 }
-.clip-item {
-    background-color: #444;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    list-style: none;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-}
+
 .metadata-group {
     display: block;
 }
