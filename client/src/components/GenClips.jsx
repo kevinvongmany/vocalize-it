@@ -286,6 +286,7 @@ const GenClips = () => {
                 <label>Translate From</label>
                 <select
                   id="TranslateFrom"
+                  className="h-12"
                   value={sourceLang}
                   onChange={(e) => setSourceLang(e.target.value)}
                 >
@@ -301,6 +302,7 @@ const GenClips = () => {
                 <label>Translate To</label>
                 <select
                   id="TranslateTo"
+                  className="h-12"
                   value={targetLang}
                   onChange={(e) => setTargetLang(e.target.value)}
                 >
