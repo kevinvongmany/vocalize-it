@@ -316,6 +316,7 @@ const GenClips = () => {
               <textarea
                 id="langOutput"
                 name="disabled"
+                className="p-2"
                 value={translatedText}
                 onChange={(e) => setTranslatedText(e.target.value)}
                 disabled
