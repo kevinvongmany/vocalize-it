@@ -5,6 +5,8 @@ import { useMutation } from '@apollo/client';
 import Auth from '../utils/auth';
 import { LOGIN } from '../utils/mutations';
 
+import { toast } from 'react-toastify';
+
 const Login = () => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [validated, setValidated] = useState(false);
@@ -42,7 +44,7 @@ const Login = () => {
       Auth.login(token); //Signin the user
     } catch (err) {
       console.error(err);
-      setShowAlert(true);
+      toast.error("Login failed. Please try again.");
     }
 
     setUserFormData({
