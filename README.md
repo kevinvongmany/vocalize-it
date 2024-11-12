@@ -42,7 +42,7 @@ npm run start
 
   
 ## Usage
-The application / page can be accessed at: https://vocalize-it.onreander.com
+The application / page can be accessed at: https://vocalize-it.onrender.com
 
 The following image shows the application's appearance and functionality:
 
