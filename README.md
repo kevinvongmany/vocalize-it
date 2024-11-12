@@ -90,4 +90,4 @@ Warren Shan and
 Adrianna Janikova
   
 ## License
-None
+MIT License
