@@ -177,7 +177,7 @@ const GenClips = () => {
                 console.log(
                   `Audio file saved successfully for user ${username}. Total clips: ${clipCount}`
                 );
-                toast.warning(`Audio file saved successfully!`);
+                toast.success(`Audio file saved successfully!`);
               } else {
                 console.error("Error saving audio.");
               }
